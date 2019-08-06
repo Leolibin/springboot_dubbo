@@ -71,4 +71,49 @@ public class UserController {
     public String toAddUser(){
         return "addUser";
     }
+
+
+    /**
+     * 添加用户||修改用户
+     * @param user
+     * @return
+     */
+    @RequestMapping("/user/addUser")
+    public String addUser(User user){
+
+        Integer id = user.getId();
+        if(null == id){
+            //添加用户
+            userService.addUser(user);
+        }else {
+            //修改用户
+            userService.updateUser(user);
+        }
+        return "redirect:/index";
+    }
+
+    /**
+     * 查询需要修改的对象
+     * @param id
+     * @return
+     */
+    @RequestMapping("/user/toUpdate")
+    public String updateUser(Model model,
+                             @RequestParam("id") Integer id){
+        User user = userService.getUserById(id);
+        model.addAttribute("user",user);
+        return "addUser";
+    }
+
+    /**
+     * 删除对象
+     * @param id
+     * @return
+     */
+    @RequestMapping("/user/deleteUser")
+    public String deleteUser(Integer id){
+        //删除用户
+        userService.deleteUser(id);
+        return "redirect:/index";
+    }
 }

@@ -26,4 +26,11 @@ public interface UserService {
      */
     int getUserByTotal();
 
+    int addUser(User user);
+
+    int updateUser(User user);
+
+    int deleteUser(Integer id);
+
+    User getUserById(Integer id);
 }
