@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,14 +24,14 @@ public class UserController {
     @Reference
     private UserService userService;
 
-    @RequestMapping("/")
+    @RequestMapping("/index")
     public String index(Model model,
                         @RequestParam(value = "currentPage", required = false) Integer currentPage) {
 
         //定义每页的大小
         int pageSize = 5;
 
-        if (null == currentPage) {
+        if (null == currentPage || currentPage < 1) {
             currentPage = 1;
         }
         //查询总数
@@ -45,6 +44,10 @@ public class UserController {
             totalPages += 1;
         }
 
+        if (currentPage > totalPages){
+            currentPage = totalPages;
+        }
+
         //计算查询的开始行
         int startRow = (currentPage - 1) * pageSize;
         Map<String, Object> paramMap = new ConcurrentHashMap<>();
@@ -54,6 +57,18 @@ public class UserController {
 
         //跳到模板页面
         model.addAttribute("userList", userList);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
         return "index";
+    }
+
+
+    /**
+     * 去添加用户
+     * @return
+     */
+    @RequestMapping("/user/toAddUser")
+    public String toAddUser(){
+        return "addUser";
     }
 }
